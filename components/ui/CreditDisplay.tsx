@@ -1,9 +1,11 @@
 'use client';
 
 import { useAuth } from '@/contexts/AuthContext';
+import { useTranslations } from 'next-intl';
 
 export function CreditDisplay() {
     const { user } = useAuth();
+    const t = useTranslations('nav');
 
     if (!user) return null;
 
@@ -22,7 +24,7 @@ export function CreditDisplay() {
                 />
             </svg>
             <span className="font-bold">{user.credits.toFixed(2)}</span>
-            <span className="text-sm opacity-90">Credits</span>
+            <span className="text-sm opacity-90">{t('credits')}</span>
         </div>
     );
 }

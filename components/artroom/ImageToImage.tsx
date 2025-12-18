@@ -7,9 +7,12 @@ import { Input } from '@/components/ui/Input';
 import { Slider } from '@/components/ui/Slider';
 import { useAuth } from '@/contexts/AuthContext';
 import Image from 'next/image';
+import { useTranslations } from 'next-intl';
 
 export function ImageToImage() {
     const { user, refreshCredits } = useAuth();
+    const tCommon = useTranslations('artroom.common');
+    const tImg = useTranslations('artroom.imageToImage');
     const [imageFile, setImageFile] = useState<File | null>(null);
     const [imagePreview, setImagePreview] = useState<string | null>(null);
     const [prompt, setPrompt] = useState('');
@@ -41,7 +44,7 @@ export function ImageToImage() {
 
     const handleGenerate = async () => {
         if (!user) {
-            setError('Please sign in to generate images');
+            setError(tCommon('signInRequired'));
             return;
         }
 
@@ -52,7 +55,7 @@ export function ImageToImage() {
 
         const cost = 0.5;
         if (user.credits < cost) {
-            setError('Insufficient credits');
+            setError(tCommon('insufficientCredits'));
             return;
         }
 
@@ -94,7 +97,7 @@ export function ImageToImage() {
         <div className="space-y-6">
             <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Source Image
+                    {tImg('sourceImage')}
                 </label>
                 <div
                     {...getRootProps()}
@@ -130,7 +133,7 @@ export function ImageToImage() {
                                 />
                             </svg>
                             <p className="mt-2 text-sm text-gray-600">
-                                Drag and drop an image, or click to select
+                                {tImg('dragDrop')}
                             </p>
                         </div>
                     )}
@@ -138,21 +141,21 @@ export function ImageToImage() {
             </div>
 
             <Input
-                label="Transformation Prompt"
+                label={tImg('transformPrompt')}
                 value={prompt}
                 onChange={(e) => setPrompt(e.target.value)}
-                placeholder="Describe how to transform the image..."
+                placeholder={tImg('transformPlaceholder')}
             />
 
             <Input
-                label="Negative Prompt (Optional)"
+                label={tCommon('negativePrompt')}
                 value={negativePrompt}
                 onChange={(e) => setNegativePrompt(e.target.value)}
-                placeholder="What to avoid..."
+                placeholder={tCommon('negativePromptPlaceholder')}
             />
 
             <Slider
-                label={`Image Strength: ${strength.toFixed(1)} (Redraw Intensity)`}
+                label={`${tImg('strength')}: ${strength.toFixed(1)} (${tImg('strengthDesc')})`}
                 value={strength}
                 onChange={setStrength}
                 min={0.1}
@@ -166,13 +169,13 @@ export function ImageToImage() {
                     onClick={() => setShowAdvanced(!showAdvanced)}
                     className="text-sm font-medium text-primary-600 hover:text-primary-700 flex items-center gap-1"
                 >
-                    {showAdvanced ? '▼' : '▶'} Advanced Settings
+                    {showAdvanced ? '▼' : '▶'} {tCommon('advancedSettings')}
                 </button>
 
                 {showAdvanced && (
                     <div className="mt-4 space-y-4 p-4 bg-gray-50 rounded-lg">
                         <Slider
-                            label={`Inference Steps: ${steps}`}
+                            label={`${tImg('inferenceSteps')}: ${steps}`}
                             value={steps}
                             onChange={setSteps}
                             min={1}
@@ -181,7 +184,7 @@ export function ImageToImage() {
                         />
 
                         <Slider
-                            label={`Guidance Scale: ${guidance.toFixed(1)}`}
+                            label={`${tImg('guidanceScale')}: ${guidance.toFixed(1)}`}
                             value={guidance}
                             onChange={setGuidance}
                             min={1}
@@ -191,13 +194,13 @@ export function ImageToImage() {
 
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">
-                                Seed (for reproducible results)
+                                {tCommon('seed')}
                             </label>
                             <Input
                                 type="number"
                                 value={seed}
                                 onChange={(e) => setSeed(e.target.value)}
-                                placeholder="Random if empty"
+                                placeholder={tCommon('seedPlaceholder')}
                             />
                         </div>
                     </div>
@@ -217,12 +220,12 @@ export function ImageToImage() {
                 className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-bold shadow-lg"
                 size="lg"
             >
-                {loading ? 'Transforming...' : '🎨 Transform Image (0.5 credits)'}
+                {loading ? tCommon('transforming') : `🎨 ${tCommon('generate')} (0.5 credits)`}
             </Button>
 
             {result && (
                 <div className="mt-6">
-                    <h3 className="text-lg font-semibold mb-3">Result:</h3>
+                    <h3 className="text-lg font-semibold mb-3">{tCommon('result')}</h3>
                     <div className="relative rounded-lg overflow-hidden">
                         <Image
                             src={result}

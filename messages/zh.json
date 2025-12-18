@@ -3,6 +3,7 @@
         "home": "首页",
         "artroom": "创作室",
         "loraTrainer": "LoRA 训练",
+        "gallery": "画廊",
         "pricing": "定价",
         "profile": "个人中心",
         "signIn": "登录",
@@ -139,5 +140,18 @@
         "delete": "删除",
         "edit": "编辑",
         "close": "关闭"
+    },
+    "gallery": {
+        "title": "我的画廊",
+        "filters": {
+            "all": "全部",
+            "textToImage": "文字生成图片",
+            "imageToImage": "图片转换",
+            "imageToVideo": "图片生成视频"
+        },
+        "noGenerations": "还没有生成内容。开始创作吧!",
+        "download": "下载",
+        "delete": "删除",
+        "confirmDelete": "确定要删除这个生成内容吗?"
     }
 }

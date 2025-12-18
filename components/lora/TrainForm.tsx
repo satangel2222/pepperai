@@ -6,9 +6,12 @@ import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { useAuth } from '@/contexts/AuthContext';
 import Image from 'next/image';
+import { useTranslations } from 'next-intl';
 
 export function TrainForm() {
     const { user, refreshCredits } = useAuth();
+    const t = useTranslations('loraTrainer');
+    const tCommon = useTranslations('artroom.common');
     const [images, setImages] = useState<File[]>([]);
     const [previews, setPreviews] = useState<string[]>([]);
     const [triggerWord, setTriggerWord] = useState('');
@@ -42,7 +45,7 @@ export function TrainForm() {
 
     const handleTrain = async () => {
         if (!user) {
-            setError('Please sign in to train models');
+            setError(tCommon('signInRequired'));
             return;
         }
 
@@ -58,7 +61,7 @@ export function TrainForm() {
 
         const cost = 8.0;
         if (user.credits < cost) {
-            setError('Insufficient credits. Training costs 8 credits.');
+            setError(tCommon('insufficientCredits'));
             return;
         }
 
@@ -99,13 +102,13 @@ export function TrainForm() {
         <div className="space-y-6">
             <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Training Images (Minimum 5, Recommended 20+)
+                    {t('uploadImages')}
                 </label>
                 <div
                     {...getRootProps()}
                     className={`border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-colors ${isDragActive
-                            ? 'border-primary-500 bg-primary-50'
-                            : 'border-gray-300 hover:border-primary-400'
+                        ? 'border-primary-500 bg-primary-50'
+                        : 'border-gray-300 hover:border-primary-400'
                         }`}
                 >
                     <input {...getInputProps()} />
@@ -123,7 +126,7 @@ export function TrainForm() {
                         />
                     </svg>
                     <p className="mt-2 text-sm text-gray-600">
-                        Drag and drop images, or click to select
+                        {t('dragDrop')}
                     </p>
                     <p className="text-xs text-gray-500 mt-1">
                         Supports JPG, PNG, WebP, GIF, AVIF
@@ -159,15 +162,15 @@ export function TrainForm() {
             </div>
 
             <Input
-                label="Trigger Word"
+                label={t('triggerWord')}
                 value={triggerWord}
                 onChange={(e) => setTriggerWord(e.target.value)}
-                placeholder="e.g., mycharacter, mystyle"
+                placeholder={t('triggerWordPlaceholder')}
             />
 
             <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Training Steps
+                    {t('steps')}
                 </label>
                 <div className="flex gap-2 flex-wrap">
                     {[2000, 3000, 4000].map((s) => (
@@ -175,8 +178,8 @@ export function TrainForm() {
                             key={s}
                             onClick={() => setSteps(s)}
                             className={`px-4 py-2 rounded-lg font-medium transition-all ${steps === s
-                                    ? 'bg-primary-600 text-white'
-                                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                                ? 'bg-primary-600 text-white'
+                                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                                 }`}
                         >
                             {s} steps
@@ -204,7 +207,7 @@ export function TrainForm() {
                 className="w-full"
                 size="lg"
             >
-                Start Training (8 credits)
+                {loading ? t('training') : `${t('startTraining')} (8 ${t('cost')})`}
             </Button>
         </div>
     );

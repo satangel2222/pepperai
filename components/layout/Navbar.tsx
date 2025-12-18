@@ -7,9 +7,12 @@ import { Button } from '@/components/ui/Button';
 import { useState } from 'react';
 import { Modal } from '@/components/ui/Modal';
 import { Input } from '@/components/ui/Input';
+import { useTranslations } from 'next-intl';
+import { LanguageSwitcher } from '@/components/ui/LanguageSwitcher';
 
 export function Navbar() {
     const { user, signIn, signUp, signOut } = useAuth();
+    const t = useTranslations('nav');
     const [showAuthModal, setShowAuthModal] = useState(false);
     const [isSignUp, setIsSignUp] = useState(false);
     const [email, setEmail] = useState('');
@@ -58,25 +61,31 @@ export function Navbar() {
                                     href="/"
                                     className="text-gray-700 hover:text-primary-600 font-medium transition-colors"
                                 >
-                                    Home
+                                    {t('home')}
                                 </Link>
                                 <Link
                                     href="/artroom"
                                     className="text-gray-700 hover:text-primary-600 font-medium transition-colors"
                                 >
-                                    ArtRoom
+                                    {t('artroom')}
+                                </Link>
+                                <Link
+                                    href="/gallery"
+                                    className="text-gray-700 hover:text-primary-600 font-medium transition-colors"
+                                >
+                                    {t('gallery')}
                                 </Link>
                                 <Link
                                     href="/lora-trainer"
                                     className="text-gray-700 hover:text-primary-600 font-medium transition-colors"
                                 >
-                                    LoRA Trainer
+                                    {t('loraTrainer')}
                                 </Link>
                                 <Link
                                     href="/pricing"
                                     className="text-gray-700 hover:text-primary-600 font-medium transition-colors"
                                 >
-                                    Pricing
+                                    {t('pricing')}
                                 </Link>
                             </div>
                         </div>
@@ -87,11 +96,11 @@ export function Navbar() {
                                     <CreditDisplay />
                                     <Link href="/profile">
                                         <Button variant="ghost" size="sm">
-                                            Profile
+                                            {t('profile')}
                                         </Button>
                                     </Link>
                                     <Button variant="outline" size="sm" onClick={signOut}>
-                                        Sign Out
+                                        {t('signOut')}
                                     </Button>
                                 </>
                             ) : (
@@ -103,9 +112,10 @@ export function Navbar() {
                                         setShowAuthModal(true);
                                     }}
                                 >
-                                    Sign In
+                                    {t('signIn')}
                                 </Button>
                             )}
+                            <LanguageSwitcher />
                         </div>
                     </div>
                 </div>

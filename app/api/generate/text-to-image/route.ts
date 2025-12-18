@@ -5,7 +5,7 @@ import { CREDIT_COSTS } from '@/lib/stripe';
 
 export async function POST(req: NextRequest) {
     try {
-        const { prompt, image_size, resolution } = await req.json();
+        const { prompt, image_size, resolution, lora_url, lora_scale, num_images, seed, negative_prompt } = await req.json();
 
         // Get user from session
         const supabase = await createClient();
@@ -38,6 +38,11 @@ export async function POST(req: NextRequest) {
         const result = await generateTextToImage({
             prompt,
             image_size,
+            negative_prompt,
+            num_images,
+            seed,
+            lora_url,
+            lora_scale,
         });
 
         const imageUrl = (result as any).data.images[0].url;
@@ -53,7 +58,7 @@ export async function POST(req: NextRequest) {
             user_id: user.id,
             type: 'text2img',
             prompt,
-            settings: { image_size, resolution },
+            settings: { image_size, resolution, lora_url, lora_scale },
             result_url: imageUrl,
             cost,
             status: 'completed',

@@ -6,9 +6,13 @@ import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { useAuth } from '@/contexts/AuthContext';
 import Image from 'next/image';
+import { useTranslations } from 'next-intl';
 
 export function ImageToVideo() {
     const { user, refreshCredits } = useAuth();
+    const tCommon = useTranslations('artroom.common');
+    const tVideo = useTranslations('artroom.imageToVideo');
+    const tImg = useTranslations('artroom.imageToImage');
     const [imageFile, setImageFile] = useState<File | null>(null);
     const [imagePreview, setImagePreview] = useState<string | null>(null);
     const [prompt, setPrompt] = useState('');
@@ -48,7 +52,7 @@ export function ImageToVideo() {
 
     const handleGenerate = async () => {
         if (!user) {
-            setError('Please sign in to generate videos');
+            setError(tCommon('signInRequired'));
             return;
         }
 
@@ -59,7 +63,7 @@ export function ImageToVideo() {
 
         const cost = getCost();
         if (user.credits < cost) {
-            setError('Insufficient credits');
+            setError(tCommon('insufficientCredits'));
             return;
         }
 
@@ -100,7 +104,7 @@ export function ImageToVideo() {
         <div className="space-y-6">
             <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Source Image
+                    {tImg('sourceImage')}
                 </label>
                 <div
                     {...getRootProps()}
@@ -136,7 +140,7 @@ export function ImageToVideo() {
                                 />
                             </svg>
                             <p className="mt-2 text-sm text-gray-600">
-                                Drag and drop an image, or click to select
+                                {tImg('dragDrop')}
                             </p>
                         </div>
                     )}
@@ -144,22 +148,22 @@ export function ImageToVideo() {
             </div>
 
             <Input
-                label="Motion Description"
+                label={tVideo('motionDescription')}
                 value={prompt}
                 onChange={(e) => setPrompt(e.target.value)}
-                placeholder="Describe the motion you want..."
+                placeholder={tVideo('motionPlaceholder')}
             />
 
             <Input
-                label="Negative Prompt (Optional)"
+                label={tCommon('negativePrompt')}
                 value={negativePrompt}
                 onChange={(e) => setNegativePrompt(e.target.value)}
-                placeholder="What to avoid in the video..."
+                placeholder={tCommon('negativePromptPlaceholder')}
             />
 
             <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Resolution
+                    {tVideo('resolution')}
                 </label>
                 <div className="flex gap-2 flex-wrap">
                     {['480p', '720p', '1080p'].map((res) => (
@@ -179,7 +183,7 @@ export function ImageToVideo() {
 
             <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Duration
+                    {tVideo('duration')}
                 </label>
                 <div className="flex gap-2 flex-wrap">
                     {['5', '10'].map((dur) => (
@@ -203,20 +207,20 @@ export function ImageToVideo() {
                     onClick={() => setShowAdvanced(!showAdvanced)}
                     className="text-sm font-medium text-primary-600 hover:text-primary-700 flex items-center gap-1"
                 >
-                    {showAdvanced ? '▼' : '▶'} Advanced Settings
+                    {showAdvanced ? '▼' : '▶'} {tCommon('advancedSettings')}
                 </button>
 
                 {showAdvanced && (
                     <div className="mt-4 space-y-4 p-4 bg-gray-50 rounded-lg">
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">
-                                Seed (for reproducible results)
+                                {tCommon('seed')}
                             </label>
                             <Input
                                 type="number"
                                 value={seed}
                                 onChange={(e) => setSeed(e.target.value)}
-                                placeholder="Random if empty"
+                                placeholder={tCommon('seedPlaceholder')}
                             />
                         </div>
                     </div>
@@ -236,12 +240,12 @@ export function ImageToVideo() {
                 className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-bold shadow-lg"
                 size="lg"
             >
-                {loading ? 'Generating Video...' : `🎬 Generate Video (${getCost()} credits)`}
+                {loading ? tCommon('generatingVideo') : `🎬 ${tCommon('generate')} (${getCost()} credits)`}
             </Button>
 
             {result && (
                 <div className="mt-6">
-                    <h3 className="text-lg font-semibold mb-3">Result:</h3>
+                    <h3 className="text-lg font-semibold mb-3">{tCommon('result')}</h3>
                     <video
                         src={result}
                         controls

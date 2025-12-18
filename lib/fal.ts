@@ -8,11 +8,14 @@ fal.config({
 export interface TextToImageParams {
     prompt: string;
     image_size?: string;
+    negative_prompt?: string;
     num_inference_steps?: number;
     guidance_scale?: number;
     num_images?: number;
     enable_safety_checker?: boolean;
     seed?: number;
+    lora_url?: string;
+    lora_scale?: number;
     loras?: Array<{
         path: string;
         scale: number;
@@ -57,16 +60,22 @@ export interface LoRATrainingParams {
 // Text to Image with LoRA support
 export async function generateTextToImage(params: TextToImageParams) {
     try {
+        // Convert lora_url and lora_scale to loras array format
+        const loras = params.lora_url && params.lora_scale
+            ? [{ path: params.lora_url, scale: params.lora_scale }]
+            : (params.loras || []);
+
         const result = await fal.subscribe('fal-ai/z-image/turbo/lora', {
             input: {
                 prompt: params.prompt,
+                negative_prompt: params.negative_prompt || '',
                 image_size: params.image_size || '1024x1024',
                 num_inference_steps: params.num_inference_steps || 4,
                 guidance_scale: params.guidance_scale || 3.5,
                 num_images: params.num_images || 1,
                 enable_safety_checker: params.enable_safety_checker ?? false, // Spicy mode ON by default
                 seed: params.seed,
-                loras: params.loras || [],
+                loras: loras,
             },
             logs: true,
         });

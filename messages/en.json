@@ -3,6 +3,7 @@
         "home": "Home",
         "artroom": "ArtRoom",
         "loraTrainer": "LoRA Trainer",
+        "gallery": "Gallery",
         "pricing": "Pricing",
         "profile": "Profile",
         "signIn": "Sign In",
@@ -139,5 +140,18 @@
         "delete": "Delete",
         "edit": "Edit",
         "close": "Close"
+    },
+    "gallery": {
+        "title": "My Gallery",
+        "filters": {
+            "all": "All",
+            "textToImage": "Text to Image",
+            "imageToImage": "Image to Image",
+            "imageToVideo": "Image to Video"
+        },
+        "noGenerations": "No generations yet. Start creating!",
+        "download": "Download",
+        "delete": "Delete",
+        "confirmDelete": "Are you sure you want to delete this generation?"
     }
 }

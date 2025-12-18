@@ -5,9 +5,13 @@ import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { useAuth } from '@/contexts/AuthContext';
 import Image from 'next/image';
+import { useTranslations } from 'next-intl';
+import { LoRASelector } from '@/components/lora/LoRASelector';
 
 export function TextToImage() {
     const { user, refreshCredits } = useAuth();
+    const tCommon = useTranslations('artroom.common');
+    const tText = useTranslations('artroom.textToImage');
     const [prompt, setPrompt] = useState('');
     const [negativePrompt, setNegativePrompt] = useState('');
     const [aspectRatio, setAspectRatio] = useState('1:1');
@@ -18,6 +22,8 @@ export function TextToImage() {
     const [loading, setLoading] = useState(false);
     const [result, setResult] = useState<string | null>(null);
     const [error, setError] = useState('');
+    const [selectedLora, setSelectedLora] = useState<any>(null);
+    const [loraWeight, setLoraWeight] = useState(0.8);
 
     const aspectRatios = [
         { label: '1:1', value: '1024x1024' },
@@ -35,7 +41,7 @@ export function TextToImage() {
 
     const handleGenerate = async () => {
         if (!user) {
-            setError('Please sign in to generate images');
+            setError(tCommon('signInRequired'));
             return;
         }
 
@@ -46,7 +52,7 @@ export function TextToImage() {
 
         const cost = resolutionCosts[resolution] * numImages;
         if (user.credits < cost) {
-            setError('Insufficient credits');
+            setError(tCommon('insufficientCredits'));
             return;
         }
 
@@ -66,6 +72,8 @@ export function TextToImage() {
                     resolution,
                     num_images: numImages,
                     seed: seed ? parseInt(seed) : undefined,
+                    lora_url: selectedLora?.model_url,
+                    lora_scale: selectedLora ? loraWeight : undefined,
                 }),
             });
 
@@ -88,12 +96,12 @@ export function TextToImage() {
         <div className="space-y-6">
             <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Prompt
+                    {tCommon('prompt')}
                 </label>
                 <textarea
                     value={prompt}
                     onChange={(e) => setPrompt(e.target.value)}
-                    placeholder="Describe the image you want to create..."
+                    placeholder={tCommon('promptPlaceholder')}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent resize-none"
                     rows={4}
                 />
@@ -101,12 +109,12 @@ export function TextToImage() {
 
             <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Negative Prompt (Optional)
+                    {tCommon('negativePrompt')}
                 </label>
                 <textarea
                     value={negativePrompt}
                     onChange={(e) => setNegativePrompt(e.target.value)}
-                    placeholder="What to avoid in the image..."
+                    placeholder={tCommon('negativePromptPlaceholder')}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent resize-none"
                     rows={2}
                 />
@@ -114,7 +122,7 @@ export function TextToImage() {
 
             <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Aspect Ratio
+                    {tText('aspectRatio')}
                 </label>
                 <div className="flex gap-2 flex-wrap">
                     {aspectRatios.map((ratio) => (
@@ -134,7 +142,7 @@ export function TextToImage() {
 
             <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Resolution
+                    {tText('resolution')}
                 </label>
                 <div className="flex gap-2 flex-wrap">
                     <button
@@ -144,7 +152,7 @@ export function TextToImage() {
                             : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                             }`}
                     >
-                        Standard (0.25 credits)
+                        {tText('standard')} (0.25 credits)
                     </button>
                     <button
                         onClick={() => setResolution('4k')}
@@ -173,35 +181,42 @@ export function TextToImage() {
                     onClick={() => setShowAdvanced(!showAdvanced)}
                     className="text-sm font-medium text-primary-600 hover:text-primary-700 flex items-center gap-1"
                 >
-                    {showAdvanced ? '▼' : '▶'} Advanced Settings
+                    {showAdvanced ? '▼' : '▶'} {tCommon('advancedSettings')}
                 </button>
 
                 {showAdvanced && (
                     <div className="mt-4 space-y-4 p-4 bg-gray-50 rounded-lg">
+                        <LoRASelector
+                            onSelect={(model, weight) => {
+                                setSelectedLora(model);
+                                setLoraWeight(weight);
+                            }}
+                        />
+
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">
-                                Number of Images
+                                {tText('numImages')}
                             </label>
                             <select
                                 value={numImages}
                                 onChange={(e) => setNumImages(parseInt(e.target.value))}
                                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500"
                             >
-                                <option value={1}>1 image</option>
-                                <option value={2}>2 images</option>
-                                <option value={4}>4 images</option>
+                                <option value={1}>1 {tText('images')}</option>
+                                <option value={2}>2 {tText('images')}</option>
+                                <option value={4}>4 {tText('images')}</option>
                             </select>
                         </div>
 
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">
-                                Seed (for reproducible results)
+                                {tCommon('seed')}
                             </label>
                             <Input
                                 type="number"
                                 value={seed}
                                 onChange={(e) => setSeed(e.target.value)}
-                                placeholder="Random if empty"
+                                placeholder={tCommon('seedPlaceholder')}
                             />
                         </div>
                     </div>
@@ -221,12 +236,12 @@ export function TextToImage() {
                 className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-bold shadow-lg"
                 size="lg"
             >
-                {loading ? 'Generating...' : `🎨 Generate Image (${(resolutionCosts[resolution] * numImages).toFixed(2)} credits)`}
+                {loading ? tCommon('generating') : `🎨 ${tCommon('generate')} (${(resolutionCosts[resolution] * numImages).toFixed(2)} credits)`}
             </Button>
 
             {result && (
                 <div className="mt-6">
-                    <h3 className="text-lg font-semibold mb-3">Result:</h3>
+                    <h3 className="text-lg font-semibold mb-3">{tCommon('result')}</h3>
                     <div className="relative rounded-lg overflow-hidden">
                         <Image
                             src={result}
