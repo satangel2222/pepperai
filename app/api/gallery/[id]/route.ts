@@ -3,9 +3,12 @@ import { createClient } from '@/lib/supabase-server';
 
 export async function DELETE(
     request: NextRequest,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
     try {
+        // Await params in Next.js 15+
+        const { id } = await params;
+
         // Get user from session
         const supabase = await createClient();
         const { data: { user }, error: authError } = await supabase.auth.getUser();
@@ -18,7 +21,7 @@ export async function DELETE(
         const { error } = await supabase
             .from('generations')
             .delete()
-            .eq('id', params.id)
+            .eq('id', id)
             .eq('user_id', user.id);
 
         if (error) {
