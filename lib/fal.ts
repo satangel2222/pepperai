@@ -11,6 +11,8 @@ export interface TextToImageParams {
     num_inference_steps?: number;
     guidance_scale?: number;
     num_images?: number;
+    enable_safety_checker?: boolean;
+    seed?: number;
     loras?: Array<{
         path: string;
         scale: number;
@@ -24,19 +26,32 @@ export interface ImageToImageParams {
     strength?: number;
     num_inference_steps?: number;
     guidance_scale?: number;
+    enable_safety_checker?: boolean;
+    seed?: number;
+    loras?: Array<{
+        path: string;
+        scale: number;
+    }>;
 }
 
 export interface ImageToVideoParams {
     image_url: string;
     prompt: string;
-    duration?: number;
-    resolution?: string;
+    negative_prompt?: string;
+    duration?: '5' | '10';
+    resolution?: '480p' | '720p' | '1080p';
+    enable_safety_checker?: boolean;
+    enable_prompt_expansion?: boolean;
+    audio_url?: string;
+    seed?: number;
 }
 
 export interface LoRATrainingParams {
-    images_data_url: string;
-    trigger_word: string;
+    image_data_url: string;
     steps?: number;
+    learning_rate?: number;
+    training_type?: 'content' | 'style' | 'balanced';
+    default_caption?: string;
 }
 
 // Text to Image with LoRA support
@@ -49,6 +64,8 @@ export async function generateTextToImage(params: TextToImageParams) {
                 num_inference_steps: params.num_inference_steps || 4,
                 guidance_scale: params.guidance_scale || 3.5,
                 num_images: params.num_images || 1,
+                enable_safety_checker: params.enable_safety_checker ?? false, // Spicy mode ON by default
+                seed: params.seed,
                 loras: params.loras || [],
             },
             logs: true,
@@ -60,10 +77,10 @@ export async function generateTextToImage(params: TextToImageParams) {
     }
 }
 
-// Image to Image
+// Image to Image with LoRA support
 export async function generateImageToImage(params: ImageToImageParams) {
     try {
-        const result = await fal.subscribe('fal-ai/z-image/turbo/image-to-image', {
+        const result = await fal.subscribe('fal-ai/z-image/turbo/image-to-image/lora', {
             input: {
                 image_url: params.image_url,
                 prompt: params.prompt,
@@ -71,6 +88,9 @@ export async function generateImageToImage(params: ImageToImageParams) {
                 strength: params.strength || 0.8,
                 num_inference_steps: params.num_inference_steps || 4,
                 guidance_scale: params.guidance_scale || 3.5,
+                enable_safety_checker: params.enable_safety_checker ?? false, // Spicy mode ON by default
+                seed: params.seed,
+                loras: params.loras || [],
             },
             logs: true,
         });
@@ -88,8 +108,13 @@ export async function generateImageToVideo(params: ImageToVideoParams) {
             input: {
                 image_url: params.image_url,
                 prompt: params.prompt,
-                duration: params.duration || 5,
-                resolution: params.resolution || '720p',
+                negative_prompt: params.negative_prompt || 'low resolution, error, worst quality, low quality, defects',
+                duration: params.duration || '5',
+                resolution: params.resolution || '1080p',
+                enable_safety_checker: params.enable_safety_checker ?? false, // Spicy mode ON by default
+                enable_prompt_expansion: params.enable_prompt_expansion ?? true,
+                audio_url: params.audio_url,
+                seed: params.seed,
             },
             logs: true,
         });
@@ -105,9 +130,11 @@ export async function trainLoRA(params: LoRATrainingParams) {
     try {
         const result = await fal.subscribe('fal-ai/z-image-trainer', {
             input: {
-                images_data_url: params.images_data_url,
-                trigger_word: params.trigger_word,
-                steps: params.steps || 3000,
+                image_data_url: params.image_data_url, // Fixed: was images_data_url
+                steps: params.steps || 1000, // Fixed: default was 3000, should be 1000
+                learning_rate: params.learning_rate || 0.0001,
+                training_type: params.training_type || 'balanced',
+                default_caption: params.default_caption,
             },
             logs: true,
         });

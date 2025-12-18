@@ -48,13 +48,13 @@ export async function POST(req: NextRequest) {
 
         // For now, we'll use the first image as a placeholder
         // In production, you'd create a proper dataset URL
-        const images_data_url = imageDataUrls[0];
+        const image_data_url = imageDataUrls[0];
 
         // Start training
         const result = await trainLoRA({
-            images_data_url,
-            trigger_word,
+            image_data_url,
             steps,
+            default_caption: trigger_word, // Use trigger word as default caption
         });
 
         // Deduct credits
