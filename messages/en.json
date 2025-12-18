@@ -1,0 +1,143 @@
+{
+    "nav": {
+        "home": "Home",
+        "artroom": "ArtRoom",
+        "loraTrainer": "LoRA Trainer",
+        "pricing": "Pricing",
+        "profile": "Profile",
+        "signIn": "Sign In",
+        "signOut": "Sign Out",
+        "credits": "Credits"
+    },
+    "home": {
+        "title": "Create Stunning AI Art",
+        "subtitle": "Transform your imagination into reality with our powerful AI generation tools",
+        "getStarted": "Get Started Free",
+        "features": {
+            "title": "Powerful Features",
+            "textToImage": {
+                "title": "Text to Image",
+                "description": "Generate stunning images from text descriptions"
+            },
+            "imageToImage": {
+                "title": "Image to Image",
+                "description": "Transform existing images with AI"
+            },
+            "imageToVideo": {
+                "title": "Image to Video",
+                "description": "Bring your images to life with motion"
+            },
+            "loraTraining": {
+                "title": "LoRA Training",
+                "description": "Train custom models for your unique style"
+            }
+        }
+    },
+    "artroom": {
+        "title": "ArtRoom",
+        "tabs": {
+            "textToImage": "Text to Image",
+            "imageToImage": "Image to Image",
+            "imageToVideo": "Image to Video"
+        },
+        "common": {
+            "prompt": "Prompt",
+            "promptPlaceholder": "Describe the image you want to create...",
+            "negativePrompt": "Negative Prompt (Optional)",
+            "negativePromptPlaceholder": "What to avoid in the image...",
+            "generate": "Generate Image",
+            "generating": "Generating...",
+            "transforming": "Transforming...",
+            "generatingVideo": "Generating Video...",
+            "result": "Result:",
+            "signInRequired": "Please sign in to generate images",
+            "insufficientCredits": "Insufficient credits",
+            "advancedSettings": "Advanced Settings",
+            "seed": "Seed (for reproducible results)",
+            "seedPlaceholder": "Random if empty"
+        },
+        "textToImage": {
+            "aspectRatio": "Aspect Ratio",
+            "resolution": "Resolution",
+            "standard": "Standard",
+            "numImages": "Number of Images",
+            "images": "images"
+        },
+        "imageToImage": {
+            "sourceImage": "Source Image",
+            "dragDrop": "Drag and drop an image, or click to select",
+            "transformPrompt": "Transformation Prompt",
+            "transformPlaceholder": "Describe how to transform the image...",
+            "strength": "Image Strength",
+            "strengthDesc": "Redraw Intensity",
+            "inferenceSteps": "Inference Steps",
+            "guidanceScale": "Guidance Scale"
+        },
+        "imageToVideo": {
+            "motionDescription": "Motion Description",
+            "motionPlaceholder": "Describe the motion you want...",
+            "resolution": "Resolution",
+            "duration": "Duration"
+        }
+    },
+    "pricing": {
+        "title": "Pricing",
+        "subtitle": "Choose the perfect plan for your creative needs",
+        "discount": "25% cheaper than MirrorRim!",
+        "popular": "POPULAR",
+        "purchase": "Purchase",
+        "signInToPurchase": "Sign In to Purchase",
+        "perCredit": "per credit",
+        "credits": "Credits",
+        "usageGuide": {
+            "title": "Credit Usage Guide",
+            "textToImage": "Text to Image",
+            "imageToImage": "Image to Image",
+            "imageToVideo": "Image to Video",
+            "loraTraining": "LoRA Training",
+            "perGeneration": "Per generation",
+            "perTraining": "Per training session"
+        }
+    },
+    "profile": {
+        "title": "Profile",
+        "credits": "Credits",
+        "email": "Email",
+        "memberSince": "Member Since",
+        "recentGenerations": "Recent Generations",
+        "type": "Type",
+        "prompt": "Prompt",
+        "cost": "Cost",
+        "date": "Date",
+        "noGenerations": "No generations yet"
+    },
+    "loraTrainer": {
+        "title": "LoRA Trainer",
+        "description": "Train custom LoRA models with your own images",
+        "uploadImages": "Upload Training Images",
+        "dragDrop": "Drag and drop images, or click to select",
+        "triggerWord": "Trigger Word",
+        "triggerWordPlaceholder": "A unique word to activate this style...",
+        "steps": "Training Steps",
+        "startTraining": "Start Training",
+        "training": "Training...",
+        "cost": "credits",
+        "myModels": "My LoRA Models",
+        "status": "Status",
+        "actions": "Actions",
+        "download": "Download",
+        "delete": "Delete",
+        "noModels": "No models yet"
+    },
+    "common": {
+        "loading": "Loading...",
+        "error": "Error",
+        "success": "Success",
+        "cancel": "Cancel",
+        "confirm": "Confirm",
+        "save": "Save",
+        "delete": "Delete",
+        "edit": "Edit",
+        "close": "Close"
+    }
+}

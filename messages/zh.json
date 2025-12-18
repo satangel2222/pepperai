@@ -1,0 +1,143 @@
+{
+    "nav": {
+        "home": "首页",
+        "artroom": "创作室",
+        "loraTrainer": "LoRA 训练",
+        "pricing": "定价",
+        "profile": "个人中心",
+        "signIn": "登录",
+        "signOut": "退出",
+        "credits": "积分"
+    },
+    "home": {
+        "title": "创作惊艳的 AI 艺术",
+        "subtitle": "用强大的 AI 生成工具将您的想象变为现实",
+        "getStarted": "免费开始",
+        "features": {
+            "title": "强大功能",
+            "textToImage": {
+                "title": "文字生成图片",
+                "description": "从文字描述生成精美图片"
+            },
+            "imageToImage": {
+                "title": "图片转换",
+                "description": "用 AI 转换现有图片"
+            },
+            "imageToVideo": {
+                "title": "图片生成视频",
+                "description": "让您的图片动起来"
+            },
+            "loraTraining": {
+                "title": "LoRA 训练",
+                "description": "训练专属风格模型"
+            }
+        }
+    },
+    "artroom": {
+        "title": "创作室",
+        "tabs": {
+            "textToImage": "文字生成图片",
+            "imageToImage": "图片转换",
+            "imageToVideo": "图片生成视频"
+        },
+        "common": {
+            "prompt": "提示词",
+            "promptPlaceholder": "描述您想要创作的图片...",
+            "negativePrompt": "负面提示词(可选)",
+            "negativePromptPlaceholder": "要避免的内容...",
+            "generate": "生成图片",
+            "generating": "生成中...",
+            "transforming": "转换中...",
+            "generatingVideo": "生成视频中...",
+            "result": "结果:",
+            "signInRequired": "请登录后生成图片",
+            "insufficientCredits": "积分不足",
+            "advancedSettings": "高级设置",
+            "seed": "种子(用于可重现结果)",
+            "seedPlaceholder": "留空则随机"
+        },
+        "textToImage": {
+            "aspectRatio": "宽高比",
+            "resolution": "分辨率",
+            "standard": "标准",
+            "numImages": "图片数量",
+            "images": "张图片"
+        },
+        "imageToImage": {
+            "sourceImage": "源图片",
+            "dragDrop": "拖放图片,或点击选择",
+            "transformPrompt": "转换提示词",
+            "transformPlaceholder": "描述如何转换图片...",
+            "strength": "图片强度",
+            "strengthDesc": "重绘强度",
+            "inferenceSteps": "推理步数",
+            "guidanceScale": "引导系数"
+        },
+        "imageToVideo": {
+            "motionDescription": "运动描述",
+            "motionPlaceholder": "描述您想要的运动效果...",
+            "resolution": "分辨率",
+            "duration": "时长"
+        }
+    },
+    "pricing": {
+        "title": "定价",
+        "subtitle": "选择最适合您创作需求的套餐",
+        "discount": "比 MirrorRim 便宜 25%!",
+        "popular": "最受欢迎",
+        "purchase": "购买",
+        "signInToPurchase": "登录后购买",
+        "perCredit": "每积分",
+        "credits": "积分",
+        "usageGuide": {
+            "title": "积分使用指南",
+            "textToImage": "文字生成图片",
+            "imageToImage": "图片转换",
+            "imageToVideo": "图片生成视频",
+            "loraTraining": "LoRA 训练",
+            "perGeneration": "每次生成",
+            "perTraining": "每次训练"
+        }
+    },
+    "profile": {
+        "title": "个人中心",
+        "credits": "积分",
+        "email": "邮箱",
+        "memberSince": "注册时间",
+        "recentGenerations": "最近生成",
+        "type": "类型",
+        "prompt": "提示词",
+        "cost": "消耗",
+        "date": "日期",
+        "noGenerations": "还没有生成记录"
+    },
+    "loraTrainer": {
+        "title": "LoRA 训练器",
+        "description": "用您自己的图片训练自定义 LoRA 模型",
+        "uploadImages": "上传训练图片",
+        "dragDrop": "拖放图片,或点击选择",
+        "triggerWord": "触发词",
+        "triggerWordPlaceholder": "激活此风格的独特词汇...",
+        "steps": "训练步数",
+        "startTraining": "开始训练",
+        "training": "训练中...",
+        "cost": "积分",
+        "myModels": "我的 LoRA 模型",
+        "status": "状态",
+        "actions": "操作",
+        "download": "下载",
+        "delete": "删除",
+        "noModels": "还没有模型"
+    },
+    "common": {
+        "loading": "加载中...",
+        "error": "错误",
+        "success": "成功",
+        "cancel": "取消",
+        "confirm": "确认",
+        "save": "保存",
+        "delete": "删除",
+        "edit": "编辑",
+        "close": "关闭"
+    }
+}
