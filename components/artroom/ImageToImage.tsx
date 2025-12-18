@@ -17,6 +17,8 @@ export function ImageToImage() {
     const [strength, setStrength] = useState(0.8);
     const [steps, setSteps] = useState(4);
     const [guidance, setGuidance] = useState(3.5);
+    const [seed, setSeed] = useState('');
+    const [showAdvanced, setShowAdvanced] = useState(false);
     const [loading, setLoading] = useState(false);
     const [result, setResult] = useState<string | null>(null);
     const [error, setError] = useState('');
@@ -66,6 +68,7 @@ export function ImageToImage() {
             formData.append('strength', strength.toString());
             formData.append('steps', steps.toString());
             formData.append('guidance', guidance.toString());
+            if (seed) formData.append('seed', seed);
 
             const response = await fetch('/api/generate/image-to-image', {
                 method: 'POST',
@@ -96,8 +99,8 @@ export function ImageToImage() {
                 <div
                     {...getRootProps()}
                     className={`border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-colors ${isDragActive
-                            ? 'border-primary-500 bg-primary-50'
-                            : 'border-gray-300 hover:border-primary-400'
+                        ? 'border-primary-500 bg-primary-50'
+                        : 'border-gray-300 hover:border-primary-400'
                         }`}
                 >
                     <input {...getInputProps()} />
@@ -149,7 +152,7 @@ export function ImageToImage() {
             />
 
             <Slider
-                label="Image Strength (Redraw Intensity)"
+                label={`Image Strength: ${strength.toFixed(1)} (Redraw Intensity)`}
                 value={strength}
                 onChange={setStrength}
                 min={0.1}
@@ -157,23 +160,49 @@ export function ImageToImage() {
                 step={0.1}
             />
 
-            <Slider
-                label="Inference Steps"
-                value={steps}
-                onChange={setSteps}
-                min={1}
-                max={10}
-                step={1}
-            />
+            {/* Advanced Settings */}
+            <div>
+                <button
+                    onClick={() => setShowAdvanced(!showAdvanced)}
+                    className="text-sm font-medium text-primary-600 hover:text-primary-700 flex items-center gap-1"
+                >
+                    {showAdvanced ? '▼' : '▶'} Advanced Settings
+                </button>
 
-            <Slider
-                label="Guidance Scale"
-                value={guidance}
-                onChange={setGuidance}
-                min={1}
-                max={10}
-                step={0.5}
-            />
+                {showAdvanced && (
+                    <div className="mt-4 space-y-4 p-4 bg-gray-50 rounded-lg">
+                        <Slider
+                            label={`Inference Steps: ${steps}`}
+                            value={steps}
+                            onChange={setSteps}
+                            min={1}
+                            max={10}
+                            step={1}
+                        />
+
+                        <Slider
+                            label={`Guidance Scale: ${guidance.toFixed(1)}`}
+                            value={guidance}
+                            onChange={setGuidance}
+                            min={1}
+                            max={10}
+                            step={0.5}
+                        />
+
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                                Seed (for reproducible results)
+                            </label>
+                            <Input
+                                type="number"
+                                value={seed}
+                                onChange={(e) => setSeed(e.target.value)}
+                                placeholder="Random if empty"
+                            />
+                        </div>
+                    </div>
+                )}
+            </div>
 
             {error && (
                 <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
@@ -185,10 +214,10 @@ export function ImageToImage() {
                 onClick={handleGenerate}
                 loading={loading}
                 disabled={!user || loading || !imageFile}
-                className="w-full"
+                className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-bold shadow-lg"
                 size="lg"
             >
-                Generate Image (0.5 credits)
+                {loading ? 'Transforming...' : '🎨 Transform Image (0.5 credits)'}
             </Button>
 
             {result && (

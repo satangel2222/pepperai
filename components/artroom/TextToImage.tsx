@@ -9,8 +9,12 @@ import Image from 'next/image';
 export function TextToImage() {
     const { user, refreshCredits } = useAuth();
     const [prompt, setPrompt] = useState('');
+    const [negativePrompt, setNegativePrompt] = useState('');
     const [aspectRatio, setAspectRatio] = useState('1:1');
     const [resolution, setResolution] = useState<'standard' | '4k' | '8k'>('standard');
+    const [numImages, setNumImages] = useState(1);
+    const [seed, setSeed] = useState('');
+    const [showAdvanced, setShowAdvanced] = useState(false);
     const [loading, setLoading] = useState(false);
     const [result, setResult] = useState<string | null>(null);
     const [error, setError] = useState('');
@@ -40,7 +44,7 @@ export function TextToImage() {
             return;
         }
 
-        const cost = resolutionCosts[resolution];
+        const cost = resolutionCosts[resolution] * numImages;
         if (user.credits < cost) {
             setError('Insufficient credits');
             return;
@@ -57,8 +61,11 @@ export function TextToImage() {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     prompt,
+                    negative_prompt: negativePrompt || undefined,
                     image_size: selectedRatio?.value || '1024x1024',
                     resolution,
+                    num_images: numImages,
+                    seed: seed ? parseInt(seed) : undefined,
                 }),
             });
 
@@ -94,6 +101,19 @@ export function TextToImage() {
 
             <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Negative Prompt (Optional)
+                </label>
+                <textarea
+                    value={negativePrompt}
+                    onChange={(e) => setNegativePrompt(e.target.value)}
+                    placeholder="What to avoid in the image..."
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent resize-none"
+                    rows={2}
+                />
+            </div>
+
+            <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
                     Aspect Ratio
                 </label>
                 <div className="flex gap-2 flex-wrap">
@@ -102,8 +122,8 @@ export function TextToImage() {
                             key={ratio.label}
                             onClick={() => setAspectRatio(ratio.label)}
                             className={`px-4 py-2 rounded-lg font-medium transition-all ${aspectRatio === ratio.label
-                                    ? 'bg-primary-600 text-white'
-                                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                                ? 'bg-primary-600 text-white'
+                                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                                 }`}
                         >
                             {ratio.label}
@@ -120,8 +140,8 @@ export function TextToImage() {
                     <button
                         onClick={() => setResolution('standard')}
                         className={`px-4 py-2 rounded-lg font-medium transition-all ${resolution === 'standard'
-                                ? 'bg-primary-600 text-white'
-                                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                            ? 'bg-primary-600 text-white'
+                            : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                             }`}
                     >
                         Standard (0.25 credits)
@@ -129,8 +149,8 @@ export function TextToImage() {
                     <button
                         onClick={() => setResolution('4k')}
                         className={`px-4 py-2 rounded-lg font-medium transition-all ${resolution === '4k'
-                                ? 'bg-primary-600 text-white'
-                                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                            ? 'bg-primary-600 text-white'
+                            : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                             }`}
                     >
                         4K (0.5 credits)
@@ -138,13 +158,54 @@ export function TextToImage() {
                     <button
                         onClick={() => setResolution('8k')}
                         className={`px-4 py-2 rounded-lg font-medium transition-all ${resolution === '8k'
-                                ? 'bg-primary-600 text-white'
-                                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                            ? 'bg-primary-600 text-white'
+                            : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                             }`}
                     >
                         8K (1.5 credits)
                     </button>
                 </div>
+            </div>
+
+            {/* Advanced Settings */}
+            <div>
+                <button
+                    onClick={() => setShowAdvanced(!showAdvanced)}
+                    className="text-sm font-medium text-primary-600 hover:text-primary-700 flex items-center gap-1"
+                >
+                    {showAdvanced ? '▼' : '▶'} Advanced Settings
+                </button>
+
+                {showAdvanced && (
+                    <div className="mt-4 space-y-4 p-4 bg-gray-50 rounded-lg">
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                                Number of Images
+                            </label>
+                            <select
+                                value={numImages}
+                                onChange={(e) => setNumImages(parseInt(e.target.value))}
+                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500"
+                            >
+                                <option value={1}>1 image</option>
+                                <option value={2}>2 images</option>
+                                <option value={4}>4 images</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                                Seed (for reproducible results)
+                            </label>
+                            <Input
+                                type="number"
+                                value={seed}
+                                onChange={(e) => setSeed(e.target.value)}
+                                placeholder="Random if empty"
+                            />
+                        </div>
+                    </div>
+                )}
             </div>
 
             {error && (
@@ -157,10 +218,10 @@ export function TextToImage() {
                 onClick={handleGenerate}
                 loading={loading}
                 disabled={!user || loading}
-                className="w-full"
+                className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-bold shadow-lg"
                 size="lg"
             >
-                Generate Image ({resolutionCosts[resolution]} credits)
+                {loading ? 'Generating...' : `🎨 Generate Image (${(resolutionCosts[resolution] * numImages).toFixed(2)} credits)`}
             </Button>
 
             {result && (

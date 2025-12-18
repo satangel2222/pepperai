@@ -24,3 +24,14 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Fix text selection visibility */
+::selection {
+  background-color: #8b5cf6; /* Purple */
+  color: #ffffff;
+}
+
+::-moz-selection {
+  background-color: #8b5cf6;
+  color: #ffffff;
+}

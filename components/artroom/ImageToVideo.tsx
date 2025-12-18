@@ -12,8 +12,11 @@ export function ImageToVideo() {
     const [imageFile, setImageFile] = useState<File | null>(null);
     const [imagePreview, setImagePreview] = useState<string | null>(null);
     const [prompt, setPrompt] = useState('');
-    const [resolution, setResolution] = useState('720p');
-    const [duration, setDuration] = useState(5);
+    const [negativePrompt, setNegativePrompt] = useState('');
+    const [resolution, setResolution] = useState('1080p');
+    const [duration, setDuration] = useState('5');
+    const [seed, setSeed] = useState('');
+    const [showAdvanced, setShowAdvanced] = useState(false);
     const [loading, setLoading] = useState(false);
     const [result, setResult] = useState<string | null>(null);
     const [error, setError] = useState('');
@@ -35,10 +38,10 @@ export function ImageToVideo() {
     });
 
     const getCost = () => {
-        const costs: Record<string, Record<number, number>> = {
-            '480p': { 5: 0.5, 10: 1.0 },
-            '720p': { 5: 1.0, 10: 2.0 },
-            '1080p': { 5: 2.0, 10: 4.0 },
+        const costs: Record<string, Record<string, number>> = {
+            '480p': { '5': 0.5, '10': 1.0 },
+            '720p': { '5': 1.0, '10': 2.0 },
+            '1080p': { '5': 2.0, '10': 4.0 },
         };
         return costs[resolution]?.[duration] || 1.0;
     };
@@ -68,8 +71,10 @@ export function ImageToVideo() {
             const formData = new FormData();
             formData.append('image', imageFile);
             formData.append('prompt', prompt);
+            formData.append('negative_prompt', negativePrompt);
             formData.append('resolution', resolution);
-            formData.append('duration', duration.toString());
+            formData.append('duration', duration);
+            if (seed) formData.append('seed', seed);
 
             const response = await fetch('/api/generate/image-to-video', {
                 method: 'POST',
@@ -100,8 +105,8 @@ export function ImageToVideo() {
                 <div
                     {...getRootProps()}
                     className={`border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-colors ${isDragActive
-                            ? 'border-primary-500 bg-primary-50'
-                            : 'border-gray-300 hover:border-primary-400'
+                        ? 'border-primary-500 bg-primary-50'
+                        : 'border-gray-300 hover:border-primary-400'
                         }`}
                 >
                     <input {...getInputProps()} />
@@ -145,6 +150,13 @@ export function ImageToVideo() {
                 placeholder="Describe the motion you want..."
             />
 
+            <Input
+                label="Negative Prompt (Optional)"
+                value={negativePrompt}
+                onChange={(e) => setNegativePrompt(e.target.value)}
+                placeholder="What to avoid in the video..."
+            />
+
             <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                     Resolution
@@ -155,8 +167,8 @@ export function ImageToVideo() {
                             key={res}
                             onClick={() => setResolution(res)}
                             className={`px-4 py-2 rounded-lg font-medium transition-all ${resolution === res
-                                    ? 'bg-primary-600 text-white'
-                                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                                ? 'bg-primary-600 text-white'
+                                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                                 }`}
                         >
                             {res}
@@ -170,19 +182,45 @@ export function ImageToVideo() {
                     Duration
                 </label>
                 <div className="flex gap-2 flex-wrap">
-                    {[5, 10].map((dur) => (
+                    {['5', '10'].map((dur) => (
                         <button
                             key={dur}
                             onClick={() => setDuration(dur)}
                             className={`px-4 py-2 rounded-lg font-medium transition-all ${duration === dur
-                                    ? 'bg-primary-600 text-white'
-                                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                                ? 'bg-primary-600 text-white'
+                                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                                 }`}
                         >
                             {dur}s
                         </button>
                     ))}
                 </div>
+            </div>
+
+            {/* Advanced Settings */}
+            <div>
+                <button
+                    onClick={() => setShowAdvanced(!showAdvanced)}
+                    className="text-sm font-medium text-primary-600 hover:text-primary-700 flex items-center gap-1"
+                >
+                    {showAdvanced ? '▼' : '▶'} Advanced Settings
+                </button>
+
+                {showAdvanced && (
+                    <div className="mt-4 space-y-4 p-4 bg-gray-50 rounded-lg">
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                                Seed (for reproducible results)
+                            </label>
+                            <Input
+                                type="number"
+                                value={seed}
+                                onChange={(e) => setSeed(e.target.value)}
+                                placeholder="Random if empty"
+                            />
+                        </div>
+                    </div>
+                )}
             </div>
 
             {error && (
@@ -195,10 +233,10 @@ export function ImageToVideo() {
                 onClick={handleGenerate}
                 loading={loading}
                 disabled={!user || loading || !imageFile}
-                className="w-full"
+                className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-bold shadow-lg"
                 size="lg"
             >
-                Generate Video ({getCost()} credits)
+                {loading ? 'Generating Video...' : `🎬 Generate Video (${getCost()} credits)`}
             </Button>
 
             {result && (
