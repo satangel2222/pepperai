@@ -48,7 +48,7 @@ export async function POST(req: NextRequest) {
         const result = await generateImageToVideo({
             image_url: imageUrl,
             prompt,
-            duration,
+            duration: (duration || '5') as '5' | '10',
             resolution,
         });
 
