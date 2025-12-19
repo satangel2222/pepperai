@@ -9,10 +9,14 @@ const nextConfig = {
       {
         protocol: 'https',
         hostname: 'fal.media',
+        port: '',
+        pathname: '/**',
       },
       {
         protocol: 'https',
         hostname: '**.fal.ai',
+        port: '',
+        pathname: '/**',
       },
     ],
   },
