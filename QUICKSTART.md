@@ -28,8 +28,8 @@
 Update `.env.local`:
 
 ```env
-# fal.ai (already set)
-FAL_KEY=c03c9a8c-1885-4438-9559-dcb8af729625:91a5b95ec717fe0a0cbaeaea463a7de3
+# fal.ai
+FAL_KEY=your_fal_api_key_here
 
 # Supabase (from Step 1)
 NEXT_PUBLIC_SUPABASE_URL=https://xxxxx.supabase.co

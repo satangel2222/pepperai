@@ -50,8 +50,8 @@ npm install
 Update `.env.local` with your actual values:
 
 ```env
-# fal.ai API Key (already configured)
-FAL_KEY=c03c9a8c-1885-4438-9559-dcb8af729625:91a5b95ec717fe0a0cbaeaea463a7de3
+# fal.ai API Key
+FAL_KEY=your_fal_api_key_here
 
 # Supabase Configuration
 NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
